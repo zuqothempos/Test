@@ -13,11 +13,26 @@ end)
 -- Services
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
 
 -- Variables
 local autoFarmActive = false
 local blackScreen = nil
 local speed = 550
+local startTime = nil
+local argentDebut = 0
+
+-- Fonction pour récupérer l'argent actuel
+local function getArgent()
+    local success, result = pcall(function()
+        -- Adapte ce chemin selon où est stocké l'argent dans le jeu
+        return LocalPlayer.leaderstats.Cash.Value
+    end)
+    if success then
+        return result
+    end
+    return 0
+end
 
 -- ═══════════════════════════════════════
 --          CHARGEMENT DRRAY
@@ -33,10 +48,39 @@ local tab1 = DrRayLibrary.newTab("Auto Farm", "ImageIdHere")
 
 tab1.newLabel("== Auto Farm ==")
 
+-- Labels timer et argent
+local timerLabel = tab1.newLabel("⏱ Timer : 00:00:00")
+local argentLabel = tab1.newLabel("💰 Argent gagné : 0")
+
+-- Mise à jour timer et compteur en temps réel
+spawn(function()
+    while true do
+        task.wait(1)
+        if autoFarmActive and startTime then
+            -- Timer
+            local elapsed = os.time() - startTime
+            local heures = math.floor(elapsed / 3600)
+            local minutes = math.floor((elapsed % 3600) / 60)
+            local secondes = elapsed % 60
+            timerLabel.update(string.format("⏱ Timer : %02d:%02d:%02d", heures, minutes, secondes))
+
+            -- Argent gagné
+            local argentActuel = getArgent()
+            local argentGagne = argentActuel - argentDebut
+            argentLabel.update(string.format("💰 Argent gagné : %d", argentGagne))
+        end
+    end
+end)
+
 tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(toggleState)
     autoFarmActive = toggleState
 
     if autoFarmActive then
+        -- Reset timer et compteur
+        startTime = os.time()
+        argentDebut = getArgent()
+        timerLabel.update("⏱ Timer : 00:00:00")
+        argentLabel.update("💰 Argent gagné : 0")
 
         -- Boucle destruction obstacles
         spawn(function()
@@ -50,7 +94,7 @@ tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(
             end
         end)
 
-        -- Boucle déplacement véhicule
+        -- Boucle déplacement véhicule OPTIMISÉE (sans arrêt entre les points)
         spawn(function()
             while autoFarmActive do
                 local success, err = pcall(function()
@@ -66,13 +110,12 @@ tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(
                             Vector3.new(-7594.541015625, -3.513848304748535, 5130.95263671875),
                             Vector3.new(-6205.29833984375, -3.5030133724212646, 8219.853515625)
                         ))
-                        wait(0.1)
+                        task.wait(0.1)
                     end
 
-                    car.PrimaryPart.Velocity = Vector3.new(0, 0, 0)
                     getfenv().first = true
 
-                    -- Point A
+                    -- Point A (sans arrêt, enchaîne directement sur B)
                     local locationA = Vector3.new(-6205.29833984375, 100, 8219.853515625)
                     repeat
                         task.wait()
@@ -80,27 +123,29 @@ tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(
                         car:PivotTo(CFrame.new(car.PrimaryPart.Position, locationA))
                     until LocalPlayer:DistanceFromCharacter(locationA) < 50 or not autoFarmActive
 
-                    car.PrimaryPart.Velocity = Vector3.new(0, 0, 0)
-                    wait(0.5)
-
-                    -- Point B
+                    -- Point B (sans arrêt, enchaîne directement sur A)
                     local locationB = Vector3.new(-7594.541015625, 100, 5130.95263671875)
                     repeat
                         task.wait()
                         car.PrimaryPart.Velocity = car.PrimaryPart.CFrame.LookVector * speed
                         car:PivotTo(CFrame.new(car.PrimaryPart.Position, locationB))
                     until LocalPlayer:DistanceFromCharacter(locationB) < 50 or not autoFarmActive
-
-                    car.PrimaryPart.Velocity = Vector3.new(0, 0, 0)
-                    wait(0.5)
                 end)
 
                 if not success then
                     warn("Auto Farm erreur : " .. tostring(err))
-                    wait(2)
+                    -- Auto-restart si erreur (ex: sorti du véhicule)
+                    task.wait(2)
+                    getfenv().first = false
                 end
             end
         end)
+
+    else
+        -- Reset au stop
+        startTime = nil
+        timerLabel.update("⏱ Timer : 00:00:00")
+        argentLabel.update("💰 Argent gagné : 0")
     end
 end)
 
@@ -141,4 +186,3 @@ tab2.newToggle("Black Screen", "Rend l'écran noir pour farmer en fond", false, 
         end
     end
 end)
-
