@@ -21,9 +21,7 @@ local blackScreen = nil
 -- ═══════════════════════════════════════
 --          CHARGEMENT DRRAY
 -- ═══════════════════════════════════════
-local DrRayLibrary = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"
-))()
+local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
 
 local window = DrRayLibrary:Load("Midnight Chasers", "Default")
 
@@ -147,3 +145,4 @@ end)
 tab2.newDropdown("Dropdown", "Select one of these options!", {"water", "dog", "air", "bb", "airplane", "wohhho", "yeay", "delete"}, function(selectedOption)
     print(selectedOption)
 end)
+
