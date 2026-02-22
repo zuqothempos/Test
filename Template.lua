@@ -17,6 +17,7 @@ local LocalPlayer = Players.LocalPlayer
 -- Variables
 local autoFarmActive = false
 local blackScreen = nil
+local speed = 550
 
 -- ═══════════════════════════════════════
 --          CHARGEMENT DRRAY
@@ -30,11 +31,7 @@ local window = DrRayLibrary:Load("Midnight Chasers", "Default")
 -- ═══════════════════════════════════════
 local tab1 = DrRayLibrary.newTab("Auto Farm", "ImageIdHere")
 
-tab1.newLabel("Hello, this is Tab 1.")
-
-tab1.newButton("Button", "Prints Hello!", function()
-    print('Hello!')
-end)
+tab1.newLabel("== Auto Farm ==")
 
 tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(toggleState)
     autoFarmActive = toggleState
@@ -79,7 +76,7 @@ tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(
                     local locationA = Vector3.new(-6205.29833984375, 100, 8219.853515625)
                     repeat
                         task.wait()
-                        car.PrimaryPart.Velocity = car.PrimaryPart.CFrame.LookVector * 550
+                        car.PrimaryPart.Velocity = car.PrimaryPart.CFrame.LookVector * speed
                         car:PivotTo(CFrame.new(car.PrimaryPart.Position, locationA))
                     until LocalPlayer:DistanceFromCharacter(locationA) < 50 or not autoFarmActive
 
@@ -90,7 +87,7 @@ tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(
                     local locationB = Vector3.new(-7594.541015625, 100, 5130.95263671875)
                     repeat
                         task.wait()
-                        car.PrimaryPart.Velocity = car.PrimaryPart.CFrame.LookVector * 550
+                        car.PrimaryPart.Velocity = car.PrimaryPart.CFrame.LookVector * speed
                         car:PivotTo(CFrame.new(car.PrimaryPart.Position, locationB))
                     until LocalPlayer:DistanceFromCharacter(locationB) < 50 or not autoFarmActive
 
@@ -107,8 +104,9 @@ tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(
     end
 end)
 
-tab1.newInput("Input", "Prints your input.", function(text)
-    print("Entered text in Tab 1: " .. text)
+tab1.newSlider("Vitesse", "Modifie la vitesse du véhicule", 1000, 100, 550, function(value)
+    speed = value
+    warn("Vitesse changée : " .. tostring(value))
 end)
 
 -- ═══════════════════════════════════════
@@ -116,11 +114,7 @@ end)
 -- ═══════════════════════════════════════
 local tab2 = DrRayLibrary.newTab("Visuel", "ImageIdLogoHere")
 
-tab2.newLabel("Hello, this is Tab 2.")
-
-tab2.newButton("Button", "Prints Hello!", function()
-    print('Hello!')
-end)
+tab2.newLabel("== Options Visuelles ==")
 
 tab2.newToggle("Black Screen", "Rend l'écran noir pour farmer en fond", false, function(toggleState)
     if toggleState then
@@ -140,9 +134,5 @@ tab2.newToggle("Black Screen", "Rend l'écran noir pour farmer en fond", false, 
             blackScreen = nil
         end
     end
-end)
-
-tab2.newDropdown("Dropdown", "Select one of these options!", {"water", "dog", "air", "bb", "airplane", "wohhho", "yeay", "delete"}, function(selectedOption)
-    print(selectedOption)
 end)
 
