@@ -1,4 +1,4 @@
-ocal KeySystem = loadstring(game:HttpGet("https://raw.githubusercontent.com/OopssSorry/LuaU-Free-Key-System-UI/main/source.lua"))()
+local KeySystem = loadstring(game:HttpGet("https://raw.githubusercontent.com/OopssSorry/LuaU-Free-Key-System-UI/main/source.lua"))()
 local KeyValid = false
 local response = KeySystem:Init({
 	Debug=false, -- <bool> Prints some output in console when true
@@ -24,3 +24,4 @@ if KeyValid then
   local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/zuqothempos/Test/refs/heads/main/Template.lua"))()
 
 end
+
