@@ -104,9 +104,15 @@ tab1.newToggle("Auto Farm", "Active ou désactive l'auto farm", false, function(
     end
 end)
 
-tab1.newSlider("Vitesse", "Modifie la vitesse du véhicule", 1000, 100, 550, function(value)
-    speed = value
-    warn("Vitesse changée : " .. tostring(value))
+-- Input vitesse
+tab1.newInput("Vitesse (défaut: 550)", "Entrez un nombre et appuyez sur Entrée", function(text)
+    local value = tonumber(text)
+    if value then
+        speed = value
+        warn("Vitesse changée : " .. tostring(speed))
+    else
+        warn("Vitesse invalide ! Entre un nombre.")
+    end
 end)
 
 -- ═══════════════════════════════════════
