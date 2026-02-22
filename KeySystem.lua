@@ -21,5 +21,6 @@ local response = KeySystem:Init({
 
 if not response or not KeyValid then return end
 if KeyValid then
-  local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/zuqorl/CDTStorm/refs/heads/main/template.lua"))()
+  local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/zuqothempos/Test/refs/heads/main/Template.lua"))()
+
 end
