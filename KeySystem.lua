@@ -8,7 +8,7 @@ local response = KeySystem:Init({
 	Discord="https://discord.gg/wS5JgH3dV6", -- <string or nil> Button to join your discord server
 	SaveKey=false, -- <bool or nil> Just auto save key
 	Verify=function(key) -- <function> Verify is key valid
-		if key=="Admin!" then
+		if key=="Elias" then
       KeyValid=true
 			return true
 	      
@@ -24,4 +24,5 @@ if KeyValid then
   local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/zuqothempos/Test/refs/heads/main/Template.lua"))()
 
 end
+
 
